@@ -2,80 +2,98 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+# Базовые цены по районам (€/м²) - реальные цены 2024
+DISTRICT_PRICES = {
+    "Centru": 1400,
+    "Telecentru": 1100,
+    "Ciocana": 950,
+    "Buiucani": 1150,
+    "Posta Veche": 1000,
+    "Durlești": 980,
+    "Botanica": 1200,
+    "Sculeni": 1050,
+    "Râșcani": 1100,
+    "Aeroport": 900
+}
+
+# Коэффициенты ремонта
+REPAIR_COEFFICIENTS = {
+    "Variantă sură": 0.75,
+    "Variantă albă": 0.85,
+    "Reparație cosmetică": 0.95,
+    "Euroreparație": 1.15
+}
+
+# Коэффициенты типа здания
+BUILDING_COEFFICIENTS = {
+    "Beton": 0.95,
+    "Beton celular": 0.90,
+    "Bloc": 0.85,
+    "Combinat": 0.88,
+    "Cotileț": 0.92,
+    "Cărămidă": 1.05,
+    "Lemn": 0.80,
+    "Monolit": 1.10,
+    "Panou": 0.82
+}
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = None
-
+    
     if request.method == "POST":
-        category = request.form.get("category")
-
-        # --- Квартиры ---
-        if category == "apartment":
-            area = float(request.form.get("area", 0))
-            district = request.form.get("district", "")
-
-            base_prices = {"Centru": 1200, "Botanica": 1000, "Ciocana": 800}
-            base_price = base_prices.get(district, 900)
-            total_price = area * base_price
-
-            result = {
-                "category": "apartment",
-                "district": district,
-                "area": area,
-                "price_per_m2": base_price,
-                "total_price": total_price
-            }
-
-        # --- Земля ---
-        elif category == "land":
-            land_area = float(request.form.get("land_area", 0))
-            land_district = request.form.get("land_district", "")
-
-            land_prices = {"Centru": 8000, "Botanica": 4000, "Ciocana": 2500}
-            price_per_sotka = land_prices.get(land_district, 2000)
-            total_price = land_area * price_per_sotka
-
-            result = {
-                "category": "land",
-                "district": land_district,
-                "land_area": land_area,
-                "price_per_sotka": price_per_sotka,
-                "total_price": total_price
-            }
-
-        # --- Коммерция ---
-        elif category == "commercial":
-            obj_area = float(request.form.get("object_area", 0))
-            object_type = request.form.get("object_type", "")
-            district_com = request.form.get("district_com", "")
-
-            base_prices = {"Centru": 1300, "Botanica": 1000, "Ciocana": 900}
-            type_coeff = {
-                "office": 1.0,
-                "store": 1.2,
-                "restaurant": 1.3,
-                "warehouse": 0.7,
-                "production": 0.8
-            }
-
-            base_price = base_prices.get(district_com, 1000)
-            coeff = type_coeff.get(object_type, 1.0)
-            price_per_m2 = base_price * coeff
-            total_price = obj_area * price_per_m2
-
-            result = {
-                "category": "commercial",
-                "district": district_com,
-                "object_area": obj_area,
-                "object_type": object_type,
-                "price_per_m2": price_per_m2,
-                "total_price": total_price
-            }
-
+        # Получаем данные формы
+        district = request.form.get("district")
+        rooms = int(request.form.get("rooms", 1))
+        area = float(request.form.get("area", 0))
+        repair = request.form.get("repair")
+        building = request.form.get("building")
+        floor = int(request.form.get("floor", 2))
+        total_floors = int(request.form.get("total_floors", 5))
+        
+        # Базовая цена по району
+        base_price = DISTRICT_PRICES.get(district, 1000)
+        
+        # Применяем коэффициенты
+        repair_coeff = REPAIR_COEFFICIENTS.get(repair, 1.0)
+        building_coeff = BUILDING_COEFFICIENTS.get(building, 1.0)
+        
+        # Коэффициент количества комнат
+        rooms_coeff = 1.0 + (rooms - 1) * 0.03
+        
+        # Коэффициент этажа
+        floor_coeff = 1.0
+        if floor == 1:
+            floor_coeff = 0.95  # первый этаж
+        elif floor == total_floors:
+            floor_coeff = 0.97  # последний этаж
+        
+        # Итоговая цена за м²
+        price_per_m2 = base_price * repair_coeff * building_coeff * rooms_coeff * floor_coeff
+        total_price = area * price_per_m2
+        
+        result = {
+            "district": district,
+            "rooms": rooms,
+            "area": area,
+            "repair": repair,
+            "building": building,
+            "floor": floor,
+            "total_floors": total_floors,
+            "price_per_m2": round(price_per_m2),
+            "total_price": round(total_price),
+            "base_price": base_price,
+            "repair_coeff": repair_coeff,
+            "building_coeff": building_coeff,
+            "rooms_coeff": round(rooms_coeff, 2),
+            "floor_coeff": floor_coeff
+        }
+    
     return render_template("index.html", result=result)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
 
 
