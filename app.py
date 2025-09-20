@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# 📊 Базовые цены квартир по районам (€/м²)
+# --- БАЗОВЫЕ цены квартир по районам (евро/м²) ---
 DISTRICT_PRICES = {
     "Centru": 1200,
     "Telecentru": 950,
@@ -16,7 +16,7 @@ DISTRICT_PRICES = {
     "Aeroport": 750
 }
 
-# ⚒ Коэффициенты ремонта
+# --- Коэффициенты ремонта ---
 REPAIR_COEFFICIENTS = {
     "Variantă sură": 0.75,
     "Variantă albă": 0.85,
@@ -24,7 +24,7 @@ REPAIR_COEFFICIENTS = {
     "Euroreparație": 1.15
 }
 
-# 🏢 Коэффициенты по типу здания
+# --- Коэффициенты по типу здания ---
 BUILDING_COEFFICIENTS = {
     "Beton": 0.95,
     "Beton celular": 0.90,
@@ -37,7 +37,7 @@ BUILDING_COEFFICIENTS = {
     "Panou": 0.82
 }
 
-# 🌍 Цены на землю по районам (€/сотка)
+# --- Земельные участки: цены €/сотка ---
 LAND_PRICES = {
     "Centru": 8000,
     "Botanica": 4000,
@@ -51,7 +51,7 @@ LAND_PRICES = {
     "Sculeni": 2700
 }
 
-# 🏬 Базовые цены для коммерции по районам (€/м²)
+# --- Коммерческая недвижимость €/м² по районам ---
 COMMERCIAL_DISTRICT_PRICES = {
     "Centru": 1300,
     "Botanica": 1000,
@@ -65,7 +65,7 @@ COMMERCIAL_DISTRICT_PRICES = {
     "Sculeni": 950
 }
 
-# 🛠 Коэффициенты для коммерческих объектов
+# --- Коэффициенты для разных типов коммерческих объектов ---
 COMMERCIAL_COEFFICIENTS = {
     "office": 1.0,
     "store": 1.2,
@@ -74,13 +74,14 @@ COMMERCIAL_COEFFICIENTS = {
     "production": 0.8
 }
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = None
     if request.method == "POST":
         category = request.form.get("category")
 
-        # 🏠 Квартира
+        # КВАРТИРА
         if category == "apartment":
             area = float(request.form.get("area") or 0)
             rooms = int(request.form.get("rooms") or 1)
@@ -105,13 +106,9 @@ def index():
                 "building": building,
                 "price_per_m2": round(price_per_m2),
                 "total_price": round(total_price),
-                "base_price": base_price,
-                "repair_coeff": repair_coeff,
-                "building_coeff": building_coeff,
-                "rooms_coeff": round(rooms_coeff, 2)
             }
 
-        # 🌍 Земельный участок
+        # ЗЕМЛЯ
         elif category == "land":
             land_area = float(request.form.get("land_area") or 0)
             land_district = request.form.get("land_district")
@@ -126,7 +123,7 @@ def index():
                 "total_price": round(total_price)
             }
 
-        # 🏢 Коммерческая недвижимость
+        # КОММЕРЦИЯ
         elif category == "commercial":
             obj_area = float(request.form.get("object_area") or 0)
             object_type = request.form.get("object_type")
@@ -143,12 +140,11 @@ def index():
                 "object_area": obj_area,
                 "object_type": object_type,
                 "price_per_m2": round(price_per_m2),
-                "total_price": round(total_price),
-                "base_price": base_price,
-                "type_coeff": type_coeff
+                "total_price": round(total_price)
             }
 
     return render_template("index.html", result=result)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
