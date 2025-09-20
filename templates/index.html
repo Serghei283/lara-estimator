@@ -69,7 +69,7 @@
                 </select>
 
                 <label>Площадь (сотки):</label>
-                <input type="number" step="0.1" name="land_area" required>
+                <input type="number" step="0.1" name="land_area">
             </div>
 
             <!-- Нежилое -->
@@ -84,31 +84,33 @@
                 </select>
 
                 <label>Площадь (м²):</label>
-                <input type="number" step="0.1" name="object_area" required>
+                <input type="number" step="0.1" name="object_area">
             </div>
 
             <button type="submit">Рассчитать стоимость</button>
         </form>
 
-        {% if result %}
         <section class="result">
-            <h3>Результат оценки:</h3>
-            <p><b>Тип:</b> {{ result.category }}</p>
-            <p><b>Итоговая стоимость:</b> {{ result.total_price }} €</p>
+            {% if result %}
+                <h3>Результат оценки:</h3>
+                <p><b>Тип:</b> {{ result.category }}</p>
+                <p><b>Итоговая стоимость:</b> {{ result.total_price }} €</p>
 
-            {% if result.category == "Квартира" %}
-                <p>Цена за м²: {{ result.price_per_m2 }} €</p>
-                <ul>
-                    <li>Район: {{ result.district }}</li>
-                    <li>Комнат: {{ result.rooms }}</li>
-                    <li>Этаж: {{ result.floor }} / {{ result.floors_total }}</li>
-                    <li>Ремонт: {{ result.repair }}</li>
-                    <li>Тип здания: {{ result.building }}</li>
-                    <li>Общая площадь: {{ result.area }} м²</li>
-                </ul>
+                {% if result.category == "Квартира" %}
+                    <p>Цена за м²: {{ result.price_per_m2 }} €</p>
+                    <ul>
+                        <li>Район: {{ result.district }}</li>
+                        <li>Комнат: {{ result.rooms }}</li>
+                        <li>Этаж: {{ result.floor }} / {{ result.floors_total }}</li>
+                        <li>Ремонт: {{ result.repair }}</li>
+                        <li>Тип здания: {{ result.building }}</li>
+                        <li>Общая площадь: {{ result.area }} м²</li>
+                    </ul>
+                {% endif %}
+            {% else %}
+                <p style="color:red;">⚠️ Данные ещё не обработаны — заполните форму и нажмите кнопку.</p>
             {% endif %}
         </section>
-        {% endif %}
     </main>
 
     <script>
