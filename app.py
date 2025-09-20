@@ -18,7 +18,7 @@ def index():
                 floor = 0
                 floors_total = 0
 
-            price_per_m2 = 850
+            price_per_m2 = 850  # базовая цена на основе данных 999.md
             if floor == 1:
                 price_per_m2 *= 0.95
             elif floor == floors_total and floors_total > 1:
@@ -45,7 +45,7 @@ def index():
             except:
                 land_area = 0
             
-            price_per_sotka = 1000
+            price_per_sotka = 1000  # базовая цена на основе данных 999.md
             total_price = land_area * price_per_sotka
 
             result = {
@@ -61,7 +61,7 @@ def index():
             except:
                 obj_area = 0
             
-            price_per_m2 = 1200
+            price_per_m2 = 1200  # базовая цена на основе данных 999.md
             total_price = obj_area * price_per_m2
 
             result = {
@@ -75,4 +75,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
