@@ -93,25 +93,27 @@
         <section class="result">
             {% if result %}
                 <h3>Результат оценки:</h3>
-                <p><b>Тип объекта:</b> {{ result.category }}</p>
                 <p><b>Итоговая стоимость:</b> {{ result.total_price }} €</p>
 
-                {% if result.category == "Квартира" %}
+                {% if result.category == "apartment" %}
+                <h4>Детали квартиры:</h4>
                 <ul>
                     <li>Район: {{ result.district }}</li>
                     <li>Комнат: {{ result.rooms }}</li>
                     <li>Этаж: {{ result.floor }} / {{ result.floors_total }}</li>
                     <li>Ремонт: {{ result.repair }}</li>
                     <li>Тип здания: {{ result.building }}</li>
-                    <li>Общая площадь: {{ result.area }} м²</li>
+                    <li>Площадь: {{ result.area }} м²</li>
                     <li>Цена за м²: {{ result.price_per_m2 }} €</li>
                 </ul>
-                {% elif result.category == "Земельный участок" %}
+                {% elif result.category == "land" %}
+                <h4>Детали участка:</h4>
                 <ul>
                     <li>Площадь: {{ result.land_area }} соток</li>
                     <li>Цена за сотку: {{ result.price_per_sotka }} €</li>
                 </ul>
-                {% elif result.category == "Нежилая недвижимость" %}
+                {% elif result.category == "commercial" %}
+                <h4>Детали объекта:</h4>
                 <ul>
                     <li>Площадь: {{ result.object_area }} м²</li>
                     <li>Цена за м²: {{ result.price_per_m2 }} €</li>
