@@ -9,24 +9,25 @@ def index():
         category = request.form.get("category")
 
         if category == "apartment":
-            # Параметры квартиры
-            area = float(request.form.get("area") or 0)
-            floor = int(request.form.get("floor") or 0)
-            floors_total = int(request.form.get("floors_total") or 0)
+            try:
+                area = float(request.form.get("area") or 0)
+                floor = int(request.form.get("floor") or 0)
+                floors_total = int(request.form.get("floors_total") or 0)
+            except:
+                area = 0
+                floor = 0
+                floors_total = 0
 
-            # Базовая цена за м²
             price_per_m2 = 850
-
-            # Коэфф. по этажу
             if floor == 1:
-                price_per_m2 *= 0.95   # первый этаж
-            elif floor == floors_total:
-                price_per_m2 *= 0.97   # последний этаж
+                price_per_m2 *= 0.95
+            elif floor == floors_total and floors_total > 1:
+                price_per_m2 *= 0.97
 
             total_price = area * price_per_m2
 
             result = {
-                "category": "Квартира",
+                "category": "apartment",
                 "total_price": round(total_price),
                 "price_per_m2": round(price_per_m2),
                 "district": request.form.get("district"),
@@ -43,11 +44,12 @@ def index():
                 land_area = float(request.form.get("land_area") or 0)
             except:
                 land_area = 0
+            
             price_per_sotka = 1000
             total_price = land_area * price_per_sotka
 
             result = {
-                "category": "Земельный участок",
+                "category": "land",
                 "total_price": round(total_price),
                 "land_area": land_area,
                 "price_per_sotka": price_per_sotka
@@ -58,11 +60,12 @@ def index():
                 obj_area = float(request.form.get("object_area") or 0)
             except:
                 obj_area = 0
+            
             price_per_m2 = 1200
             total_price = obj_area * price_per_m2
 
             result = {
-                "category": "Нежилая недвижимость",
+                "category": "commercial",
                 "total_price": round(total_price),
                 "object_area": obj_area,
                 "price_per_m2": price_per_m2
@@ -72,4 +75,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
