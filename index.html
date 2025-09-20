@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Агентство недвижимости Lara - Предварительная оценка</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Агентство недвижимости Lara</h1>
+        <h2>Предварительная оценка</h2>
+    </header>
+
+    <main>
+        <form method="POST">
+            <label>Что оцениваем:</label>
+            <select name="category" id="category" onchange="showForm()">
+                <option value="apartment">Квартира</option>
+                <option value="land">Земельный участок</option>
+                <option value="commercial">Нежилая недвижимость</option>
+            </select>
+
+            <!-- Квартира -->
+            <div id="apartment-form" class="form-section">
+                <label>Район:</label>
+                <select name="district">
+                    <option>Centru</option><option>Telecentru</option>
+                    <option>Ciocana</option><option>Buiucani</option>
+                    <option>Posta Veche</option><option>Durlești</option>
+                    <option>Botanica</option><option>Sculeni</option>
+                    <option>Râșcani</option><option>Aeroport</option>
+                </select>
+
+                <label>Комнат:</label>
+                <input type="number" name="rooms" required>
+
+                <label>Этаж:</label>
+                <input type="number" name="floor" required>
+                <label>Этажность:</label>
+                <input type="number" name="floors_total" required>
+
+                <label>Площадь (м²):</label>
+                <input type="number" step="0.1" name="area" required>
+
+                <label>Состояние:</label>
+                <select name="repair">
+                    <option>Variantă sură</option>
+                    <option>Variantă albă</option>
+                    <option>Reparație cosmetică</option>
+                    <option>Euroreparație</option>
+                </select>
+
+                <label>Тип здания:</label>
+                <select name="building">
+                    <option>Beton</option><option>Beton celular</option>
+                    <option>Bloc</option><option>Combinat</option>
+                    <option>Cotileț</option><option>Cărămidă</option>
+                    <option>Lemn</option><option>Monolit</option>
+                    <option>Panou</option>
+                </select>
+            </div>
+
+            <!-- Земельный участок -->
+            <div id="land-form" class="form-section" style="display:none;">
+                <label>Тип участка:</label>
+                <select name="land_type">
+                    <option value="intracity">В населенном пункте</option>
+                    <option value="agro">Сельхозназначения</option>
+                </select>
+
+                <label>Площадь (сотки):</label>
+                <input type="number" step="0.1" name="land_area" required>
+            </div>
+
+            <!-- Нежилое -->
+            <div id="commercial-form" class="form-section" style="display:none;">
+                <label>Тип объекта:</label>
+                <select name="object_type">
+                    <option value="office">Офис</option>
+                    <option value="store">Магазин</option>
+                    <option value="restaurant">Ресторан</option>
+                    <option value="warehouse">Склад</option>
+                    <option value="production">Производственное помещение</option>
+                </select>
+
+                <label>Площадь (м²):</label>
+                <input type="number" step="0.1" name="object_area" required>
+            </div>
+
+            <button type="submit">Рассчитать стоимость</button>
+        </form>
+
+        {% if result %}
+        <section class="result">
+            <h3>Результат оценки:</h3>
+            <p><b>Тип:</b> {{ result.category }}</p>
+            <p><b>Итоговая стоимость:</b> {{ result.total_price }} €</p>
+
+            {% if result.category == "Квартира" %}
+                <p>Цена за м²: {{ result.price_per_m2 }} €</p>
+                <ul>
+                    <li>Район: {{ result.district }}</li>
+                    <li>Комнат: {{ result.rooms }}</li>
+                    <li>Этаж: {{ result.floor }} / {{ result.floors_total }}</li>
+                    <li>Ремонт: {{ result.repair }}</li>
+                    <li>Тип здания: {{ result.building }}</li>
+                    <li>Общая площадь: {{ result.area }} м²</li>
+                </ul>
+            {% endif %}
+        </section>
+        {% endif %}
+    </main>
+
+    <script>
+        function showForm() {
+            let category = document.getElementById("category").value;
+            document.getElementById("apartment-form").style.display = (category === "apartment") ? "block" : "none";
+            document.getElementById("land-form").style.display = (category === "land") ? "block" : "none";
+            document.getElementById("commercial-form").style.display = (category === "commercial") ? "block" : "none";
+        }
+    </script>
+</body>
+</html>
