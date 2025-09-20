@@ -2,106 +2,160 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Биржа недвижимости Lara</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Биржа недвижимости Lara</h1>
-    <h2>Онлайн-калькулятор оценки</h2>
+    <div class="container">
+        <header class="header">
+            <h1>Биржа недвижимости Lara</h1>
+            <p class="subtitle">Профессиональная оценка квартир в Кишинёве</p>
+        </header>
 
-    <form method="POST" action="/">
-        <label>Что оцениваем:</label>
-        <select name="category" id="category" onchange="showForm()" required>
-            <option value="">Выберите</option>
-            <option value="apartment">Квартира</option>
-            <option value="land">Земля</option>
-            <option value="commercial">Нежилая недвижимость</option>
-        </select>
+        <main class="main-content">
+            <form method="POST" action="/" class="evaluation-form">
+                <div class="form-section">
+                    <h2>Параметры квартиры</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="district">Район:</label>
+                            <select name="district" id="district" required>
+                                <option value="">Выберите район</option>
+                                <option value="Centru">Centru</option>
+                                <option value="Telecentru">Telecentru</option>
+                                <option value="Ciocana">Ciocana</option>
+                                <option value="Buiucani">Buiucani</option>
+                                <option value="Posta Veche">Posta Veche</option>
+                                <option value="Durlești">Durlești</option>
+                                <option value="Botanica">Botanica</option>
+                                <option value="Sculeni">Sculeni</option>
+                                <option value="Râșcani">Râșcani</option>
+                                <option value="Aeroport">Aeroport</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="rooms">Количество комнат:</label>
+                            <select name="rooms" id="rooms" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5+</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <!-- Квартира -->
-        <div id="apartment-form" style="display:none;">
-            <label>Район:</label>
-            <select name="district">
-                <option value="Centru">Centru</option>
-                <option value="Botanica">Botanica</option>
-                <option value="Ciocana">Ciocana</option>
-            </select>
-            <label>Площадь (м²):</label>
-            <input type="number" name="area" min="10">
-        </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="area">Площадь (м²):</label>
+                            <input type="number" name="area" id="area" min="15" max="500" step="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="repair">Состояние ремонта:</label>
+                            <select name="repair" id="repair" required>
+                                <option value="">Выберите состояние</option>
+                                <option value="Variantă sură">Variantă sură</option>
+                                <option value="Variantă albă">Variantă albă</option>
+                                <option value="Reparație cosmetică">Reparație cosmetică</option>
+                                <option value="Euroreparație">Euroreparație</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <!-- Земля -->
-        <div id="land-form" style="display:none;">
-            <label>Район:</label>
-            <select name="land_district">
-                <option value="Centru">Centru</option>
-                <option value="Botanica">Botanica</option>
-                <option value="Ciocana">Ciocana</option>
-            </select>
-            <label>Площадь участка (сотки):</label>
-            <input type="number" name="land_area" min="1">
-        </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="building">Тип здания:</label>
+                            <select name="building" id="building" required>
+                                <option value="">Выберите тип</option>
+                                <option value="Monolit">Monolit</option>
+                                <option value="Cărămidă">Cărămidă</option>
+                                <option value="Beton">Beton</option>
+                                <option value="Cotileț">Cotileț</option>
+                                <option value="Beton celular">Beton celular</option>
+                                <option value="Combinat">Combinat</option>
+                                <option value="Bloc">Bloc</option>
+                                <option value="Panou">Panou</option>
+                                <option value="Lemn">Lemn</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="floor">Этаж:</label>
+                            <input type="number" name="floor" id="floor" min="1" max="25" required>
+                        </div>
+                    </div>
 
-        <!-- Коммерческая недвижимость -->
-        <div id="commercial-form" style="display:none;">
-            <label>Район:</label>
-            <select name="district_com">
-                <option value="Centru">Centru</option>
-                <option value="Botanica">Botanica</option>
-                <option value="Ciocana">Ciocana</option>
-            </select>
-            <label>Тип объекта:</label>
-            <select name="object_type">
-                <option value="office">Офис</option>
-                <option value="store">Магазин</option>
-                <option value="restaurant">Ресторан</option>
-                <option value="warehouse">Склад</option>
-                <option value="production">Производство</option>
-            </select>
-            <label>Площадь (м²):</label>
-            <input type="number" name="object_area" min="10">
-        </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="total_floors">Этажность дома:</label>
+                            <input type="number" name="total_floors" id="total_floors" min="1" max="25" required>
+                        </div>
+                    </div>
+                </div>
 
-        <button type="submit">Рассчитать</button>
-    </form>
+                <button type="submit" class="calculate-btn">Рассчитать стоимость</button>
+            </form>
 
-    <hr>
-
-    {% if result %}
-        <h2>Результат</h2>
-
-        {% if result.category == "apartment" %}
-            <p>Квартира в {{ result.district }}.  
-            Площадь: {{ result.area }} м².  
-            Цена за м²: {{ result.price_per_m2 }} €.  
-            Итог: {{ result.total_price }} €</p>
-
-        {% elif result.category == "land" %}
-            <p>Земля в {{ result.district }}.  
-            {{ result.land_area }} соток × {{ result.price_per_sotka }} € = {{ result.total_price }} €</p>
-
-        {% elif result.category == "commercial" %}
-            <p>{{ result.object_type }} в {{ result.district }}.  
-            {{ result.object_area }} м² × {{ result.price_per_m2 }} €/м² = {{ result.total_price }} €</p>
-
-        {% endif %}
-    {% endif %}
-
-<script>
-function showForm() {
-    document.getElementById("apartment-form").style.display = "none";
-    document.getElementById("land-form").style.display = "none";
-    document.getElementById("commercial-form").style.display = "none";
-
-    let category = document.getElementById("category").value;
-    if (category === "apartment") {
-        document.getElementById("apartment-form").style.display = "block";
-    } else if (category === "land") {
-        document.getElementById("land-form").style.display = "block";
-    } else if (category === "commercial") {
-        document.getElementById("commercial-form").style.display = "block";
-    }
-}
-</script>
-
+            {% if result %}
+            <div class="result-section">
+                <h2>Результат оценки</h2>
+                <div class="result-main">
+                    <div class="total-price">
+                        <span class="price-label">Итоговая стоимость:</span>
+                        <span class="price-value">{{ result.total_price }} €</span>
+                    </div>
+                    <div class="price-per-m2">
+                        <span>Цена за м²: {{ result.price_per_m2 }} €</span>
+                    </div>
+                </div>
+                
+                <div class="result-details">
+                    <h3>Детали расчёта:</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Район:</span>
+                            <span class="detail-value">{{ result.district }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Комнат:</span>
+                            <span class="detail-value">{{ result.rooms }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Площадь:</span>
+                            <span class="detail-value">{{ result.area }} м²</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Ремонт:</span>
+                            <span class="detail-value">{{ result.repair }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Здание:</span>
+                            <span class="detail-value">{{ result.building }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Этаж:</span>
+                            <span class="detail-value">{{ result.floor }} из {{ result.total_floors }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="coefficients">
+                        <h4>Применённые коэффициенты:</h4>
+                        <ul>
+                            <li>Базовая цена ({{ result.district }}): {{ result.base_price }} €/м²</li>
+                            <li>Коэффициент ремонта: {{ result.repair_coeff }}</li>
+                            <li>Коэффициент здания: {{ result.building_coeff }}</li>
+                            <li>Коэффициент комнат: {{ result.rooms_coeff }}</li>
+                            <li>Коэффициент этажа: {{ result.floor_coeff }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
 </body>
 </html>
