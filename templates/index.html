@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Агентство недвижимости Lara - Предварительная оценка</title>
+    <title>Биржа недвижимости Lara - Предварительная оценка</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
-        <h1>Агентство недвижимости Lara</h1>
+        <h1>Биржа недвижимости Lara</h1>
         <h2>Предварительная оценка</h2>
     </header>
 
@@ -81,10 +81,13 @@
             <!-- Земельный участок -->
             <div id="land-form" class="form-section" style="display:none;">
                 <div class="form-group">
-                    <label>Тип участка:</label>
-                    <select name="land_type">
-                        <option value="intracity">В населенном пункте</option>
-                        <option value="agro">Сельхозназначения</option>
+                    <label>Сектор города:</label>
+                    <select name="land_district">
+                        <option>Centru</option><option>Telecentru</option>
+                        <option>Ciocana</option><option>Buiucani</option>
+                        <option>Posta Veche</option><option>Durlești</option>
+                        <option>Botanica</option><option>Sculeni</option>
+                        <option>Râșcani</option><option>Aeroport</option>
                     </select>
                 </div>
 
