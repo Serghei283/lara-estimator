@@ -24,7 +24,7 @@
             </select>
         </div>
 
-        <!-- Квартиры -->
+        <!-- 🏠 Квартира -->
         <div id="apartment-form" class="form-section" style="display:none;">
             <div class="form-group">
                 <label>Район:</label>
@@ -49,10 +49,12 @@
                     <option value="5">5+</option>
                 </select>
             </div>
-            <div class="form-group"><label>Площадь (м²):</label>
+            <div class="form-group">
+                <label>Площадь (м²):</label>
                 <input type="number" name="area" step="0.1" min="10" max="500" required>
             </div>
-            <div class="form-group"><label>Ремонт:</label>
+            <div class="form-group">
+                <label>Ремонт:</label>
                 <select name="repair" required>
                     <option value="Variantă sură">Variantă sură</option>
                     <option value="Variantă albă">Variantă albă</option>
@@ -60,7 +62,8 @@
                     <option value="Euroreparație">Euroreparație</option>
                 </select>
             </div>
-            <div class="form-group"><label>Тип здания:</label>
+            <div class="form-group">
+                <label>Тип здания:</label>
                 <select name="building" required>
                     <option value="Monolit">Monolit</option>
                     <option value="Cărămidă">Cărămidă</option>
@@ -75,7 +78,7 @@
             </div>
         </div>
 
-        <!-- Земля -->
+        <!-- 🌍 Земля -->
         <div id="land-form" class="form-section" style="display:none;">
             <div class="form-group">
                 <label>Район:</label>
@@ -93,7 +96,7 @@
             </div>
         </div>
 
-        <!-- Коммерция -->
+        <!-- 🏬 Коммерция -->
         <div id="commercial-form" class="form-section" style="display:none;">
             <div class="form-group">
                 <label>Район:</label>
@@ -124,11 +127,37 @@
         <button type="submit" class="calculate-btn">Рассчитать стоимость</button>
     </form>
 
-    <!-- ===== Результат ===== -->
+    <!-- ===== РЕЗУЛЬТАТ ===== -->
     <section class="result">
         {% if result %}
             <h3>✅ Результат оценки</h3>
             <p><strong>Итоговая стоимость: {{ result.total_price }} €</strong></p>
+
+            {% if result.category == "apartment" %}
+                <ul>
+                    <li>Район: {{ result.district }}</li>
+                    <li>Комнат: {{ result.rooms }}</li>
+                    <li>Площадь: {{ result.area }} м²</li>
+                    <li>Ремонт: {{ result.repair }}</li>
+                    <li>Здание: {{ result.building }}</li>
+                    <li>Цена за м²: {{ result.price_per_m2 }} €</li>
+                </ul>
+            {% elif result.category == "land" %}
+                <ul>
+                    <li>Район: {{ result.district }}</li>
+                    <li>Площадь: {{ result.land_area }} соток</li>
+                    <li>Цена за сотку: {{ result.price_per_sotka }} €</li>
+                </ul>
+            {% elif result.category == "commercial" %}
+                <ul>
+                    <li>Район: {{ result.district }}</li>
+                    <li>Тип: {{ result.object_type }}</li>
+                    <li>Площадь: {{ result.object_area }} м²</li>
+                    <li>Цена за м²: {{ result.price_per_m2 }} €</li>
+                </ul>
+            {% endif %}
+        {% else %}
+            <p style="color:#777;">⚠️ Заполните форму и нажмите «Рассчитать стоимость»</p>
         {% endif %}
     </section>
 </main>
